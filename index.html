@@ -7,137 +7,162 @@
   <link href="/style.css" rel="stylesheet">
 </head>
 <body>
-  <div class="bg-noise"></div>
-  <div class="frame slide-in">
-    <div class="brand shimmer">Global Treaty Ledger</div>
+  <div class="bg-noise" aria-hidden="true"></div>
 
-    <div id="auth-view" class="card float-up">
-      <div class="tabs">
-        <button class="tab active" data-tab="login">Login</button>
-        <button class="tab" data-tab="register">Register</button>
-      </div>
-      <div class="tab-content" id="login">
-        <form id="login-form">
-          <label class="field">
-            <span>Username</span>
-            <input type="text" name="username" required autocomplete="username">
-          </label>
-          <label class="field">
-            <span>Password</span>
-            <input type="password" name="password" required autocomplete="current-password">
-          </label>
-          <button class="cta glow" type="submit">Login</button>
-        </form>
-      </div>
-      <div class="tab-content hidden" id="register">
-        <form id="register-form">
-          <label class="field">
-            <span>Username</span>
-            <input type="text" name="username" required>
-          </label>
-          <label class="field">
-            <span>Password</span>
-            <input type="password" name="password" required>
-          </label>
-          <label class="field">
-            <span>Title (shown as “username — title”)</span>
-            <input type="text" name="title" placeholder="United Kingdom of Great Britain">
-          </label>
-          <button class="cta glow" type="submit">Create account</button>
-        </form>
-      </div>
-    </div>
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
-    <div id="app-view" class="hidden">
-      <header class="app-header fade-in">
-        <div id="user-badge" class="badge pulse"></div>
-        <nav class="app-nav">
-          <button class="nav-btn" data-view="dashboard">Dashboard</button>
-          <button class="nav-btn" data-view="treaties">Treaties</button>
-          <button class="nav-btn" data-view="admin">Admin</button>
-          <button class="nav-btn danger" id="logout-btn">Logout</button>
-        </nav>
-      </header>
+  <div class="app">
+    <header class="site-header">
+      <div class="brand">Global Treaty Ledger</div>
+    </header>
 
-      <main class="content">
-        <section id="dashboard-view" class="panel">
-          <h2 class="panel-title">Overview</h2>
-          <div class="grid">
-            <div class="tile hover-rise">
-              <h3>My Status</h3>
-              <p id="role-line"></p>
-              <p id="agreement-count"></p>
+    <main class="shell">
+      <!-- Auth -->
+      <section id="auth-view" class="surface">
+        <div class="tabs" role="tablist" aria-label="Authentication">
+          <button class="tab active" data-tab="login" role="tab" aria-selected="true">Login</button>
+          <button class="tab" data-tab="register" role="tab" aria-selected="false">Register</button>
+        </div>
+
+        <div class="columns">
+          <form id="login" class="card" novalidate>
+            <h2>Welcome back</h2>
+            <div class="field">
+              <label for="login_username">Username</label>
+              <input id="login_username" name="username" required autocomplete="username">
+              <small class="error"></small>
             </div>
-            <div class="tile hover-rise">
-              <h3>Recent Treaties</h3>
-              <ul id="recent-treaties"></ul>
+            <div class="field">
+              <label for="login_password">Password</label>
+              <input id="login_password" type="password" name="password" required autocomplete="current-password">
+              <small class="error"></small>
             </div>
-          </div>
-        </section>
+            <button class="btn primary" type="submit">Login</button>
+          </form>
 
-        <section id="treaties-view" class="panel hidden">
-          <div class="panel-head">
-            <h2 class="panel-title">Treaties</h2>
-            <button class="cta glow" id="new-treaty-btn">New treaty</button>
-          </div>
-          <div id="treaty-form-wrap" class="hidden">
-            <form id="treaty-form" class="card float-up">
-              <label class="field">
-                <span>Name</span>
-                <input type="text" name="name" required>
-              </label>
-              <label class="field">
-                <span>Category</span>
-                <select name="category" required>
+          <form id="register" class="card hidden" novalidate>
+            <h2>Create account</h2>
+            <div class="field">
+              <label for="reg_username">Username</label>
+              <input id="reg_username" name="username" required>
+              <small class="error"></small>
+            </div>
+            <div class="field">
+              <label for="reg_password">Password</label>
+              <input id="reg_password" type="password" name="password" required minlength="6">
+              <small class="error"></small>
+            </div>
+            <div class="field">
+              <label for="reg_title">Title (displayed as “username — title”)</label>
+              <input id="reg_title" name="title" placeholder="United Kingdom of Great Britain">
+              <small class="error"></small>
+            </div>
+            <button class="btn primary" type="submit">Create account</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- App -->
+      <section id="app-view" class="hidden">
+        <header class="appbar">
+          <div id="user-badge" class="badge"></div>
+          <nav class="nav">
+            <button class="btn ghost" data-view="dashboard">Dashboard</button>
+            <button class="btn ghost" data-view="treaties">Treaties</button>
+            <button class="btn ghost" data-view="admin">Admin</button>
+            <button class="btn danger" id="logout-btn">Logout</button>
+          </nav>
+        </header>
+
+        <div class="surface">
+          <section id="dashboard-view" class="panel">
+            <h2>Overview</h2>
+            <div class="grid">
+              <div class="tile">
+                <h3>Status</h3>
+                <p id="role-line" class="muted"></p>
+                <p id="agreement-count" class="muted"></p>
+              </div>
+              <div class="tile">
+                <h3>Recent treaties</h3>
+                <ul id="recent-treaties" class="list"></ul>
+              </div>
+            </div>
+          </section>
+
+          <section id="treaties-view" class="panel hidden">
+            <div class="panel-head">
+              <h2>Treaties</h2>
+              <button class="btn primary" id="new-treaty-btn">New treaty</button>
+            </div>
+
+            <form id="treaty-form" class="card hidden" novalidate>
+              <div class="field">
+                <label for="t_name">Name</label>
+                <input id="t_name" name="name" required>
+                <small class="error"></small>
+              </div>
+              <div class="field">
+                <label for="t_category">Category</label>
+                <select id="t_category" name="category" required>
+                  <option value="">Choose a category</option>
                   <option>Diplomatic</option>
                   <option>Military</option>
                   <option>Economic</option>
                   <option>Environmental</option>
                 </select>
-              </label>
-              <label class="field">
-                <span>Limitations</span>
-                <textarea name="limitations" rows="3" placeholder="E.g., troop caps, embargo scope"></textarea>
-              </label>
-              <button class="cta glow" type="submit">Create</button>
-              <button class="cta ghost" type="button" id="cancel-treaty">Cancel</button>
+                <small class="error"></small>
+              </div>
+              <div class="field">
+                <label for="t_limit">Limitations</label>
+                <textarea id="t_limit" name="limitations" rows="3" placeholder="E.g., troop caps, embargo scope"></textarea>
+                <small class="error"></small>
+              </div>
+              <div class="row">
+                <button class="btn primary" type="submit">Create</button>
+                <button class="btn ghost" type="button" id="cancel-treaty">Cancel</button>
+              </div>
             </form>
-          </div>
 
-          <div id="treaty-list" class="list"></div>
-        </section>
+            <div id="treaty-list" class="list"></div>
+          </section>
 
-        <section id="admin-view" class="panel hidden">
-          <h2 class="panel-title">Administration</h2>
-          <div class="grid">
-            <div class="tile hover-rise">
-              <h3>Assign power tier</h3>
-              <form id="role-form">
-                <label class="field">
-                  <span>Username</span>
-                  <input type="text" name="username" required>
-                </label>
-                <label class="field">
-                  <span>Power tier</span>
-                  <select name="role" required>
-                    <option value="great">Great power</option>
-                    <option value="major">Major power</option>
-                    <option value="minor">Minor power</option>
-                    <option value="protectorate">Protectorate government</option>
-                  </select>
-                </label>
-                <button class="cta glow" type="submit">Assign</button>
-              </form>
-              <div id="role-feedback" class="hint"></div>
+          <section id="admin-view" class="panel hidden">
+            <h2>Administration</h2>
+            <div class="grid">
+              <div class="tile">
+                <h3>Assign power tier</h3>
+                <form id="role-form" class="stack" novalidate>
+                  <div class="field">
+                    <label for="a_user">Username</label>
+                    <input id="a_user" name="username" required>
+                    <small class="error"></small>
+                  </div>
+                  <div class="field">
+                    <label for="a_role">Power tier</label>
+                    <select id="a_role" name="role" required>
+                      <option value="">Select</option>
+                      <option value="great">Great power</option>
+                      <option value="major">Major power</option>
+                      <option value="minor">Minor power</option>
+                      <option value="protectorate">Protectorate government</option>
+                    </select>
+                    <small class="error"></small>
+                  </div>
+                  <button class="btn primary" type="submit">Assign</button>
+                  <div id="role-feedback" class="muted"></div>
+                </form>
+              </div>
+
+              <div class="tile">
+                <h3>Users</h3>
+                <ul id="user-list" class="list"></ul>
+              </div>
             </div>
-            <div class="tile hover-rise">
-              <h3>Users</h3>
-              <ul id="user-list"></ul>
-            </div>
-          </div>
-        </section>
-      </main>
-    </div>
+          </section>
+        </div>
+      </section>
+    </main>
   </div>
 
   <script src="/script.js"></script>
